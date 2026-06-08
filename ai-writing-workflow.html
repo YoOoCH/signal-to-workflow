@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI 长篇写作工作流实验 | Yang Chenghui</title>
+    <meta
+      name="description"
+      content="一次关于 AI 长篇写作工作流的项目复盘，记录我如何拆解创作流程、上下文管理、人机边界和返工路径。"
+    />
+    <meta name="color-scheme" content="light" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="case-page">
+    <header class="site-header">
+      <nav class="nav" aria-label="Primary navigation">
+        <a class="brand" href="index.html" aria-label="Back to home">
+          <span class="brand-mark">Y</span>
+          <span>Yang Chenghui</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html#cases">Cases</a>
+          <a href="#workflow">Workflow</a>
+          <a href="#method">Method</a>
+          <a href="#possibility">Possibility</a>
+          <a href="assets/yang-chenghui-ai-product-manager.pdf">Resume</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="project-hero">
+        <div class="project-hero-copy">
+          <p class="eyebrow">AI Writing Workflow Experiment</p>
+          <h1>AI 长篇写作工作流实验</h1>
+          <p class="hero-cn">
+            这个项目不是成熟产品，更像是一次围绕“AI 参与长篇内容创作后，流程应该怎么被重新组织”的实验。我把创意、题材约束、人物设定、世界观、大纲、逐章细纲、正文生成、逻辑审查、精修和导出拆开，观察哪些环节适合交给 AI，哪些环节必须保留人的判断。
+          </p>
+          <div class="hero-actions" aria-label="Project actions">
+            <a class="button primary" href="#workflow">看流程拆解</a>
+            <a class="button secondary" href="#method">看方法复盘</a>
+          </div>
+        </div>
+        <aside class="hero-panel" aria-label="Project snapshot">
+          <div>
+            <span class="panel-label">Question</span>
+            <strong>长篇生成如何保持连续性和可返工</strong>
+          </div>
+          <div>
+            <span class="panel-label">Method</span>
+            <strong>拆流程、定输入输出、沉淀中间产物</strong>
+          </div>
+          <div>
+            <span class="panel-label">State</span>
+            <strong>本地原型，已跑通主链路，仍有明显粗糙处</strong>
+          </div>
+        </aside>
+      </section>
+
+      <section class="section reader-guide">
+        <div class="section-heading">
+          <p class="eyebrow">How to read this page</p>
+          <h2>这页不是产品展示，而是一次工作流判断复盘</h2>
+          <p>
+            我希望读者主要看三件事：我如何拆解一个长链路 AI 生成任务；如何判断哪些环节适合 AI、哪些必须保留人的决策；
+            以及如果继续产品化，它为什么更适合延展成 AI 短剧脚本生成平台。
+          </p>
+        </div>
+        <div class="reader-guide-list" aria-label="Page reading guide">
+          <article>
+            <span>01</span>
+            <strong>拆任务</strong>
+            <p>把“写一部长篇”拆成题材、蓝图、人物、世界观、细纲、正文、审查和精修等可观察节点。</p>
+          </article>
+          <article>
+            <span>02</span>
+            <strong>定边界</strong>
+            <p>让 AI 负责生成、整理和审查建议，把方向选择、事实取舍和最终接受权留给人。</p>
+          </article>
+          <article>
+            <span>03</span>
+            <strong>看产品化</strong>
+            <p>从一次原型实验里，看见上下文资产、版本管理、审查反馈和返工路径这些真实产品问题。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section project-intro">
+        <div class="section-heading">
+          <p class="eyebrow">Starting Point</p>
+          <h2>我想弄清楚的问题：生成能力变强后，产品价值往哪里移动</h2>
+          <p>
+            如果 AI 已经能快速写出一段正文，困难不会消失，只是转移到了更上游和更长期的地方：人物和世界观能不能稳定，章节之间能不能连续，返工时会不会牵一发动全身，创作者能不能看清自己在控制什么。
+          </p>
+        </div>
+        <div class="fit-grid">
+          <article class="fit-item">
+            <span>01</span>
+            <h3>先看链路，不急着做功能</h3>
+            <p>
+              我先把长篇写作拆成多个阶段，观察每个阶段需要什么输入、会产出什么材料、下游会依赖哪些结论。
+            </p>
+          </article>
+          <article class="fit-item">
+            <span>02</span>
+            <h3>把上下文当成核心资产</h3>
+            <p>
+              人物档案、世界观规则、全局蓝图、章节细纲和审查报告，不只是 prompt 材料，而是后续生产持续依赖的项目资产。
+            </p>
+          </article>
+          <article class="fit-item">
+            <span>03</span>
+            <h3>给返工留入口</h3>
+            <p>
+              题材、蓝图、人物或世界观变化后，下游内容应该能被重新检查和重建，而不是每次都从头聊天。
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section workflow-section" id="workflow">
+        <div class="section-heading">
+          <p class="eyebrow">Workflow</p>
+          <h2>我把流程拆成了 10 个阶段</h2>
+          <p>
+            这个拆法不一定是最终答案，但它帮助我把“AI 写作”从一个聊天框问题，拆成一组可以观察、验证和调整的工作节点。
+          </p>
+        </div>
+
+        <div class="workflow-map" aria-label="AI writing workflow">
+          <div class="flow-node">
+            <span>01</span>
+            <strong>项目创建</strong>
+            <p>作品名称、目标字数、用户隔离、模型配置</p>
+          </div>
+          <div class="flow-node">
+            <span>02</span>
+            <strong>题材配置</strong>
+            <p>世界观类型、爽点机制、主角模板、情绪曲线</p>
+          </div>
+          <div class="flow-node">
+            <span>03</span>
+            <strong>全局蓝图</strong>
+            <p>全书阶段、核心冲突、关键转折、节奏锚点</p>
+          </div>
+          <div class="flow-node">
+            <span>04</span>
+            <strong>人物底座</strong>
+            <p>角色关系、动机、阵营、生死状态和人物事实</p>
+          </div>
+          <div class="flow-node">
+            <span>05</span>
+            <strong>世界观脉络</strong>
+            <p>规则、势力、资源、伏笔、长期上下文</p>
+          </div>
+          <div class="flow-node">
+            <span>06</span>
+            <strong>大纲与细纲</strong>
+            <p>主线大纲、章节目标、情节点、承接关系</p>
+          </div>
+          <div class="flow-node">
+            <span>07</span>
+            <strong>正文生成</strong>
+            <p>基于细纲与上下文生成章节草稿</p>
+          </div>
+          <div class="flow-node">
+            <span>08</span>
+            <strong>逻辑审查</strong>
+            <p>检查连续性、人物一致性、节奏和伏笔回收</p>
+          </div>
+          <div class="flow-node">
+            <span>09</span>
+            <strong>精修处理</strong>
+            <p>优化表达、节奏、清晰度和局部段落手感</p>
+          </div>
+          <div class="flow-node">
+            <span>10</span>
+            <strong>预览导出</strong>
+            <p>合并章节，输出可继续编辑或发布的稿件</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section product-section" id="method">
+        <div class="signal-copy">
+          <p class="eyebrow">Method</p>
+          <h2>我的方法：先定义中间产物，再讨论 AI 能做什么</h2>
+          <p>
+            这次实验里，我没有把重点放在“某个模型能不能一次写好”，而是把注意力放在更稳定的问题上：流程里有哪些中间产物，哪些产物需要版本感，哪些判断应该由人确认，哪些步骤失败后可以回滚。
+          </p>
+        </div>
+
+        <div class="product-grid">
+          <article>
+            <span>Step 1</span>
+            <h3>把创作任务拆成可命名节点</h3>
+            <p>
+              先区分题材、蓝图、人物、世界观、细纲、正文、审查和精修，不让一个大 prompt 同时承担所有职责。
+            </p>
+          </article>
+          <article>
+            <span>Step 2</span>
+            <h3>让每个节点有输入输出</h3>
+            <p>
+              每个阶段都尽量留下可读的文件或状态，例如人物档案、世界观规则、章节细纲、审查报告，方便人检查。
+            </p>
+          </article>
+          <article>
+            <span>Step 3</span>
+            <h3>明确人机边界</h3>
+            <p>
+              AI 可以生成、整理和提出审查意见，但题材方向、蓝图取舍、人物事实和最终稿件是否接受，仍应该由人决定。
+            </p>
+          </article>
+          <article>
+            <span>Step 4</span>
+            <h3>把返工设计进流程</h3>
+            <p>
+              当上游设定变化时，下游细纲、正文和审查需要重新校验。这个问题比单次生成效果更接近真实使用。
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="proof">
+        <div class="section-heading">
+          <p class="eyebrow">Evidence</p>
+          <h2>运行截图</h2>
+          <p>
+            截图只保留能说明流程和系统结构的部分，没有展示 API Key、账号密码或私有正文。点击图片可以查看大图。
+          </p>
+        </div>
+
+        <div class="proof-grid">
+          <figure>
+            <a class="image-link" href="assets/ai-writing-module-console.png" data-lightbox aria-label="查看总控台大图">
+              <img src="assets/ai-writing-module-console.png" alt="AI writing system main console screenshot" />
+            </a>
+            <figcaption>
+              <strong>总控台</strong>
+              <span>先暴露项目、服务和当前作品状态，方便定位长链路中哪一段出了问题，而不是只给一个生成入口。</span>
+            </figcaption>
+          </figure>
+          <figure>
+            <a class="image-link" href="assets/ai-writing-module-blueprint.png" data-lightbox aria-label="查看蓝图模块大图">
+              <img src="assets/ai-writing-module-blueprint.png" alt="AI writing blueprint module screenshot" />
+            </a>
+            <figcaption>
+              <strong>蓝图模块</strong>
+              <span>把全书战略、阶段规划和节奏锚点沉淀为上游约束，减少后续章节生成时的方向漂移。</span>
+            </figcaption>
+          </figure>
+          <figure>
+            <a class="image-link" href="assets/ai-writing-module-world.png" data-lightbox aria-label="查看世界观模块大图">
+              <img src="assets/ai-writing-module-world.png" alt="AI writing worldbuilding module screenshot" />
+            </a>
+            <figcaption>
+              <strong>世界观模块</strong>
+              <span>把规则、势力和长期脉络作为可复用上下文资产，而不是每次生成时临时补充 prompt。</span>
+            </figcaption>
+          </figure>
+          <figure>
+            <a class="image-link" href="assets/ai-writing-module-outline.png" data-lightbox aria-label="查看细纲模块大图">
+              <img src="assets/ai-writing-module-outline.png" alt="AI writing outline module screenshot" />
+            </a>
+            <figcaption>
+              <strong>细纲模块</strong>
+              <span>把章节拆解、任务状态和伏笔统计放在同一层，方便人判断生成前的结构是否值得推进。</span>
+            </figcaption>
+          </figure>
+          <figure>
+            <a class="image-link" href="assets/ai-writing-module-prose.png" data-lightbox aria-label="查看正文模块大图">
+              <img src="assets/ai-writing-module-prose.png" alt="AI writing prose generation module screenshot" />
+            </a>
+            <figcaption>
+              <strong>正文模块</strong>
+              <span>让正文生成承接细纲和上游材料，而不是孤立调用模型，便于后续追溯这段文本为什么这样生成。</span>
+            </figcaption>
+          </figure>
+          <figure>
+            <a class="image-link" href="assets/ai-writing-module-audit.png" data-lightbox aria-label="查看审查模块大图">
+              <img src="assets/ai-writing-module-audit.png" alt="AI writing audit module screenshot" />
+            </a>
+            <figcaption>
+              <strong>审查模块</strong>
+              <span>把连续性、设定、人物和逻辑问题重新拉回流程，让 AI 不只负责生成，也参与质量反馈。</span>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section architecture-section">
+        <div class="section-heading">
+          <p class="eyebrow">System Shape</p>
+          <h2>模块拆分是为了看清职责边界</h2>
+          <p>
+            这个原型采用本地多服务结构，不是为了证明架构复杂，而是为了把不同阶段的职责拆开。拆开以后，哪里需要上下文、哪里需要人工确认、哪里容易出错，会更容易暴露。
+          </p>
+        </div>
+        <div class="module-map">
+          <div><span>5107</span><strong>总控台</strong><p>项目选择、服务状态、统一代理</p></div>
+          <div><span>5109</span><strong>剧情总舵</strong><p>全局蓝图与全书战略</p></div>
+          <div><span>5100</span><strong>人物/细纲</strong><p>人物档案与基础材料</p></div>
+          <div><span>5101</span><strong>世界与脉络</strong><p>世界观、规则、伏笔和长期上下文</p></div>
+          <div><span>5103</span><strong>剧情中控</strong><p>大纲和逐章细纲</p></div>
+          <div><span>5106</span><strong>正文引擎</strong><p>章节正文生成和历史记录</p></div>
+          <div><span>5104</span><strong>逻辑审查</strong><p>连续性、人物、节奏和设定校验</p></div>
+          <div><span>5105</span><strong>精修服务</strong><p>表达、节奏和段落优化</p></div>
+          <div><span>5108</span><strong>导出管理</strong><p>预览、合并和导出</p></div>
+        </div>
+      </section>
+
+      <section class="section relevance-section">
+        <div class="signal-copy">
+          <p class="eyebrow">Reflection</p>
+          <h2>这个原型现在还不成熟</h2>
+          <p>
+            我不想把它包装成一个已经完成的产品。它更像是一次把问题摊开的练习：通过做一个能跑的原型，逼自己面对流程、上下文、返工、质量和界面组织这些具体问题。
+          </p>
+          <p>
+            如果继续做下去，我会优先补齐评价体系、版本管理和更清晰的创作者操作路径，而不是继续堆更多生成按钮。
+          </p>
+        </div>
+        <div class="timeline">
+          <div><span>Interface</span><strong>界面仍然偏工程化，创作者第一次使用时需要更明确的路径提示。</strong></div>
+          <div><span>Structure</span><strong>早期文件和服务命名比较混乱，后续需要继续收敛目录和边界。</strong></div>
+          <div><span>Evaluation</span><strong>目前更多是流程可跑通，还缺少系统化的内容质量评价指标。</strong></div>
+          <div><span>Next</span><strong>下一步应围绕版本、审查结果、人工确认和返工路径继续产品化。</strong></div>
+        </div>
+      </section>
+
+      <section class="section relevance-section" id="possibility">
+        <div class="signal-copy">
+          <p class="eyebrow">Possibility</p>
+          <h2>如果继续延展，我觉得它更适合走向 AI 短剧脚本生成</h2>
+          <p>
+            长篇小说和短剧脚本表面上是两种内容形态，但底层都依赖稳定的人物、世界观、冲突关系和节奏控制。这个原型里已经拆出来的人物档案、世界观、全局蓝图、章节细纲和审查机制，可以进一步转化为短剧脚本平台里的 IP 资产底座。
+          </p>
+          <p>
+            真正需要重做的不是“再接一个生成按钮”，而是把长篇章节逻辑改造成短剧需要的分集节拍、场景冲突、反转点、对白密度和镜头化表达。
+          </p>
+        </div>
+        <div class="timeline">
+          <div><span>IP Bible</span><strong>把人物、世界观、关系网和核心矛盾整理成可复用的短剧设定 bible。</strong></div>
+          <div><span>Episode Beats</span><strong>将长篇蓝图拆成每集强钩子、冲突推进、反转和结尾悬念。</strong></div>
+          <div><span>Scene Script</span><strong>从章节细纲转为场景脚本，输出人物对白、动作提示和场景目标。</strong></div>
+          <div><span>Review Loop</span><strong>继续保留审查与返工，用来检查人物一致性、节奏拖沓和前后设定冲突。</strong></div>
+        </div>
+      </section>
+
+      <section class="closing">
+        <p class="eyebrow">Product Takeaway</p>
+        <h2>我从这个项目里得到的判断</h2>
+        <p>
+          AI 产品的关键不只是模型能力，而是如何组织上下文、定义中间产物、控制生成边界，并把人的判断嵌入流程。
+          如果继续产品化，我会优先把它发展成 AI 短剧脚本生成平台：从 IP Bible、分集节拍、场景脚本到审查反馈，形成一条可协作、可回溯、可迭代的内容生产链路。
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="index.html">返回作品集首页</a>
+          <a class="button secondary" href="assets/yang-chenghui-ai-product-manager.pdf">Resume PDF</a>
+        </div>
+      </section>
+    </main>
+
+    <div class="lightbox" id="imageLightbox" aria-hidden="true" role="dialog" aria-label="图片预览">
+      <button class="lightbox-close" type="button" aria-label="关闭图片预览">×</button>
+      <img class="lightbox-image" alt="" />
+    </div>
+    <script>
+      (function () {
+        var lightbox = document.getElementById("imageLightbox");
+        if (!lightbox) return;
+        var image = lightbox.querySelector(".lightbox-image");
+        var closeButton = lightbox.querySelector(".lightbox-close");
+        var lastActive = null;
+
+        function openLightbox(link) {
+          lastActive = document.activeElement;
+          image.src = link.getAttribute("href");
+          image.alt = (link.querySelector("img") || {}).alt || "图片预览";
+          lightbox.classList.add("active");
+          lightbox.setAttribute("aria-hidden", "false");
+          document.body.classList.add("lightbox-open");
+          closeButton.focus();
+        }
+
+        function closeLightbox() {
+          lightbox.classList.remove("active");
+          lightbox.setAttribute("aria-hidden", "true");
+          document.body.classList.remove("lightbox-open");
+          image.removeAttribute("src");
+          if (lastActive && typeof lastActive.focus === "function") lastActive.focus();
+        }
+
+        document.querySelectorAll("[data-lightbox]").forEach(function (link) {
+          link.addEventListener("click", function (event) {
+            event.preventDefault();
+            openLightbox(link);
+          });
+        });
+
+        closeButton.addEventListener("click", closeLightbox);
+        lightbox.addEventListener("click", function (event) {
+          if (event.target === lightbox) closeLightbox();
+        });
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape" && lightbox.classList.contains("active")) {
+            closeLightbox();
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
