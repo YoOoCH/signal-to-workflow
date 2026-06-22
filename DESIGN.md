@@ -67,7 +67,7 @@
   - Accent: restrained archival gold.
   - Avoid dominant neon green/cyan.
 - Typography:
-  - Big display serif for hero and project titles.
+  - Modern Chinese sans display for hero and project titles; editorial, but not poster-sized.
   - System sans for body and metadata.
   - Uppercase small labels with generous spacing.
 - Spacing/layout rhythm:
